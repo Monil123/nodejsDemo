@@ -15,16 +15,17 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.employees.push('Monil Ladha');
-    this.employees.push('Sankalp Mehra');
-    this.employees.push('Aditya Singh');
-    this.employees.push('Shivank Thapa');
+    this._appService.fetchEmployees().subscribe(res => {
+      for(let response of res['data']) {
+        this.employees.push(response.name);
+      }
+    });
   }
 
   submit(){
     this.res = Number(this.value);
     this._appService.addDataTestApi(this.res).subscribe(res => {
-      this.value = (res['value']);
+      this.value = res['value'];
     });
   }
 }

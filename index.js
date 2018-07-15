@@ -9,6 +9,26 @@ var app = express();
 // Path to other APIs code
 var api = require('./server/api');
 
+// Handling the CORS pre-flight policy by enabling access-control attributes
+app.use((req, res, next) => {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 // set body-parser as a middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,11 +38,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'dist/nodejsDemo')));
 
 // Default api
-app.use('/', api);
+app.use('/api', api);
 
 // path to the 'index.html' file inside dist/nodejsDemo folder
 // this is the landing page of the web-app
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/nodejsDemo/index.html'));
 });
 
